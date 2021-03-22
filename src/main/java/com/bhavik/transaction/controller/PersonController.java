@@ -49,10 +49,4 @@ public class PersonController {
 		return new ResponseEntity("Transfer done", HttpStatus.OK);
 
 	}
-	
-	
-	@ExceptionHandler(InsufficientFund.class)
-	public ResponseEntity<Object> handleInsufficientFundIn(InsufficientFund e) {
-		return new ResponseEntity("Insufficient Fund",HttpStatus.BAD_REQUEST);
-	}
 }
