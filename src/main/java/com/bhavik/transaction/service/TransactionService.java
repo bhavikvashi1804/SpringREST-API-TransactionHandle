@@ -26,9 +26,9 @@ public class TransactionService {
 			throw new InsufficientFund("Insufficient Balance");
 		}
 		
-		
+		throw new RuntimeException();
 
-		return true;
+		//return true;
 	}
 
 }
