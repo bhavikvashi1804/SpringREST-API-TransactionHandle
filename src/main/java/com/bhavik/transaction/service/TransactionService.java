@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bhavik.transaction.exception.InsufficientFund;
 
 @Service
-@Transactional
 public class TransactionService {
 
 	@Autowired
@@ -30,7 +29,7 @@ public class TransactionService {
 		
 		
 		int noOfRowsUpdated = jdbcTemplate.update("update person set balance=balance-?  where id = ?",amount,sId);
-		if(noOfRowsUpdated == 0) {
+		if(noOfRowsUpdated == 1) {
 			throw new RuntimeException("Error in Debit");
 		}
 		
