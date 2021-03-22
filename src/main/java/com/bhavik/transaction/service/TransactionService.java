@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bhavik.transaction.exception.InsufficientFund;
 
 @Service
+@Transactional
 public class TransactionService {
 
 	@Autowired
@@ -26,18 +27,16 @@ public class TransactionService {
 		if (cBalance < amount) {
 			throw new InsufficientFund("Insufficient Balance");
 		}
-		
-		
-		int noOfRowsUpdated = jdbcTemplate.update("update person set balance=balance-?  where id = ?",amount,sId);
-		if(noOfRowsUpdated == 1) {
+
+		int noOfRowsUpdated = jdbcTemplate.update("update person set balance=balance-?  where id = ?", amount, sId);
+		if (noOfRowsUpdated == 1) {
 			throw new RuntimeException("Error in Debit");
 		}
-		
-		noOfRowsUpdated = jdbcTemplate.update("update person set balance=balance+?  where id = ?",amount,rId);
-		if(noOfRowsUpdated == 0) {
+
+		noOfRowsUpdated = jdbcTemplate.update("update person set balance=balance+?  where id = ?", amount, rId);
+		if (noOfRowsUpdated == 0) {
 			throw new RuntimeException("Error in Credit");
 		}
-		
 
 		return true;
 	}
