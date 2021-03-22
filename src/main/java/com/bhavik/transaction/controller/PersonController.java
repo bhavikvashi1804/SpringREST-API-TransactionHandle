@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bhavik.transaction.exception.InsufficientFund;
 import com.bhavik.transaction.model.Person;
 import com.bhavik.transaction.service.TransactionService;
 
@@ -46,5 +48,11 @@ public class PersonController {
 		service.doTransfer(sId, rId, amount);
 		return new ResponseEntity("Transfer done", HttpStatus.OK);
 
+	}
+	
+	
+	@ExceptionHandler(InsufficientFund.class)
+	public ResponseEntity<Object> handleInsufficientFundIn(InsufficientFund e) {
+		return new ResponseEntity("Insufficient Fund",HttpStatus.BAD_REQUEST);
 	}
 }
