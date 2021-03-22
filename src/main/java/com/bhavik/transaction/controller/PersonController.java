@@ -1,6 +1,6 @@
 package com.bhavik.transaction.controller;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,16 @@ public class PersonController {
 
 	@GetMapping("/personAPI")
 	public ResponseEntity<Object> getAllPerson() {
-		List<Person> personList = Arrays.asList(new Person(101, "Bhavik", 15000), new Person(102, "Raj", 2000));
+		List<Person> personList = jdbcTemplate.query("SELECT * FROM PERSON", (rs) -> {
+			List<Person> myList = new ArrayList<Person>();
+
+			while (rs.next()) {
+				Person p = new Person(rs.getInt("id"), rs.getString("name"), rs.getInt("balance"));
+				myList.add(p);
+			}
+
+			return myList;
+		});
 		return new ResponseEntity(personList, HttpStatus.OK);
 
 	}
