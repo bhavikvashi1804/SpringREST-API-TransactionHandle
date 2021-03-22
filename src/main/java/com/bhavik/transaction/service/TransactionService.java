@@ -3,10 +3,12 @@ package com.bhavik.transaction.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bhavik.transaction.exception.InsufficientFund;
 
 @Service
+@Transactional
 public class TransactionService {
 
 	@Autowired
@@ -26,9 +28,19 @@ public class TransactionService {
 			throw new InsufficientFund("Insufficient Balance");
 		}
 		
-		throw new RuntimeException();
+		
+		int noOfRowsUpdated = jdbcTemplate.update("update person set balance=balance-?  where id = ?",amount,sId);
+		if(noOfRowsUpdated == 0) {
+			throw new RuntimeException("Error in Debit");
+		}
+		
+		noOfRowsUpdated = jdbcTemplate.update("update person set balance=balance+?  where id = ?",amount,rId);
+		if(noOfRowsUpdated == 0) {
+			throw new RuntimeException("Error in Credit");
+		}
+		
 
-		//return true;
+		return true;
 	}
 
 }
