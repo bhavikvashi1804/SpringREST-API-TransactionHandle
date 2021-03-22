@@ -8,15 +8,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bhavik.transaction.model.Person;
+import com.bhavik.transaction.service.TransactionService;
 
 @RestController
 public class PersonController {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	TransactionService service;
 
 	@GetMapping("/personAPI")
 	public ResponseEntity<Object> getAllPerson() {
@@ -31,6 +36,15 @@ public class PersonController {
 			return myList;
 		});
 		return new ResponseEntity(personList, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/personAPI/{sId}/{rId}/{amount}")
+	public ResponseEntity<Object> transferAmount(@PathVariable int sId, @PathVariable int rId,
+			@PathVariable int amount) {
+
+		service.doTransfer(sId, rId, amount);
+		return new ResponseEntity("Transfer done", HttpStatus.OK);
 
 	}
 }
